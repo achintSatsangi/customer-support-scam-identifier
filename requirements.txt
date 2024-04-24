@@ -1,0 +1,4 @@
+fastapi==0.110.2
+langchain==0.1.16
+langchain_community==0.0.34
+uvicorn==0.29.0
