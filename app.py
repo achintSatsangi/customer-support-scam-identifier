@@ -11,9 +11,12 @@ app = FastAPI()
 prompt_template = PromptTemplate(
     input_variables=["text"],
     template="""
-    Answer TRUE or FALSE with explaination in RAW JSON format with no new line characters having fields scam : BOOLEAN, description: Explaination
-    for the following question: 
-    Is this message a scam or phishing attempt: {text}
+    In an e-commerce app, inside chat conversation, detect a fraud message,
+    Answer only in RAW JSON format, with likeliness of message being a scam with no new line characters having fields 
+    scam: boolean, 
+    likeliness: float, where 0 being not a scam and 1 being a scam,
+    description: Explaination,
+    For the following question: Is this message a scam or phishing attempt: {text}.
     """
 )
 
