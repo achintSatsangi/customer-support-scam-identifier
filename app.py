@@ -8,7 +8,7 @@ from json import loads
 app = FastAPI()
 
 # Define a prompt template
-prompt_template = PromptTemplate(
+customer_service_prompt_template = PromptTemplate(
     input_variables=["text"],
     template="""
     In an e-commerce app, inside chat conversation, detect a fraud message,
@@ -20,17 +20,31 @@ prompt_template = PromptTemplate(
     """
 )
 
+generic_prompt_template = PromptTemplate(
+    input_variables=["text"],
+    template="""{text}"""
+)
+
 # Initialize the GPT4All language model
 llm = GPT4All(model="./models/mistral-7b-openorca.gguf2.Q4_0.gguf")
 
 # Create a LLMChain to handle the prompt
-chain = LLMChain(llm=llm, prompt=prompt_template)
+customer_service_chain = LLMChain(llm=llm, prompt=customer_service_prompt_template)
+generic_prompt_chain = LLMChain(llm=llm, prompt=generic_prompt_template)
 
 @app.get("/customerServiceScam")
 async def generate_response(text: str):
-    response = chain.invoke(text)
+    response = customer_service_chain.invoke(text)
     data = loads(response["text"])
     return JSONResponse(content=data)
+
+@app.get("/prompt")
+async def generate_response(query: str):
+    print(query)
+    response = generic_prompt_chain.invoke(query)
+    data = loads(response["text"])
+    return JSONResponse(content=data)
+
 
 if __name__ == "__main__":
     import uvicorn
